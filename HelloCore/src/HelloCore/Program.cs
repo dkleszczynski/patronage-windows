@@ -22,7 +22,7 @@ namespace HelloCore
             
             string directoryPath = args[0].ToLower();
           
-            //Usunięcie białych znaków z początku i końca ścieżki 
+            //Remove white-space characters from the start and end of path.
             directoryPath = directoryPath.Trim();
             
             bool isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
@@ -43,7 +43,6 @@ namespace HelloCore
                 return;
             }
            
-            //Usunięcie białych znaków z początku nazw katalogów
             directoryPath = RemoveSpacesFromFilePath(directoryPath, isWindows);
 
             if (Directory.Exists(directoryPath) == false)
@@ -101,7 +100,7 @@ namespace HelloCore
             {
                 Console.WriteLine(ptlEx.Message + "\n" + ptlEx.StackTrace);
                 Console.WriteLine("PathTooLongException jest czasami spowodowana zbyt długa nazwa katalogu w sciezce, a nie dlugoscia samej sciezki");
-                //c# za długa nazwa katalogu lub pliku w ścieżce
+                //Too long name of directory or filename in filepath. (article)
                 //https://blogs.msdn.microsoft.com/jeremykuhne/2016/07/30/net-4-6-2-and-long-paths-on-windows-10/
             }
             catch (Exception ex)
@@ -112,7 +111,7 @@ namespace HelloCore
         }
 
         /// <summary>
-        /// Sprawdza przy użyciu wyrażeń regularnych czy podana ścieżka ma poprawną składnię w danym systemie operacyjnym.
+        /// Checks with regular expression whether path has correct syntax in defined OS. 
         /// </summary>
         /// <param name="path"></param>
         /// <param name="isWindows"></param>
@@ -124,7 +123,7 @@ namespace HelloCore
                 if (Regex.IsMatch(path, @"(^[a-zA-Z]\:\\$|^[a-zA-Z]\:\\[^/:*?<>""|]*[^\\/:*?<>""|]$)") == false)
                    return false;
             }
-            //System operacyjny typu Unix
+            //Unix type OS
             else
             {
                 if (Regex.IsMatch(path, @"^\/[^\0]*[^\0/]$|^\/$") == false)
@@ -135,7 +134,7 @@ namespace HelloCore
         }
 
         /// <summary>
-        /// Zwraca ścieżkę z usuniętymi białymi znakami z początku i końca każdego segmentu.
+        /// //Removes white-space characters from the start and end of path segments.
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="isWindows"></param>
@@ -173,16 +172,16 @@ namespace HelloCore
         }
 
         /// <summary>
-        /// Wyświetla ścieżkę do pliku w wielu liniach na podstawie długości segmentów.
+        /// Displays multiline path based on length of path segments.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="isWindows"></param>
         public static void DisplayPath(string path, bool isWindows)
         {
-            //limit znaków w jednym wierszu
+            //Max characters count in single line.
             int lineLimit = Console.WindowWidth;
 
-            //ścieżka mieści się w jednym wierszu
+            //Path is within a single line.
             if (path.Length < lineLimit)
             {
                 Console.WriteLine("\n{0}\n", path);
@@ -195,7 +194,7 @@ namespace HelloCore
             if (isWindows == false)
             {
                 separator = '/';
-                //ścieżka w systemie typu Unix rozpoczyna się od /
+                //Path in Unix-type Os starts with: /
                 line += separator;
             }
             else
@@ -210,7 +209,7 @@ namespace HelloCore
             {
                 position += pathParts[i].Length + 1;
 
-                //pierwszy segment w wierszu lub kolejny, który nie przekracza lineLimit
+                //Is the first segment in line or fits within current line. 
                 if (line == "" || line == "/" || position < lineLimit)
                     line += pathParts[i] + separator;
                 else
@@ -220,7 +219,7 @@ namespace HelloCore
                     position = line.Length;
                 }
 
-                //Ostatni segment ścieżki
+                //The last segment in path.
                 if (i == pathParts.Length - 1)
                 {
                     line = line.TrimEnd(new char[] { separator });
