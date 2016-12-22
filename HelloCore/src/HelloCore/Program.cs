@@ -146,7 +146,7 @@ namespace HelloCore
 
             if (isWindows)
             {
-                pathSegments = filePath.Split(new char[] { '\\', });
+                pathSegments = filePath.Split(new char[] { '\\', }, StringSplitOptions.RemoveEmptyEntries);
 
                 for (int i = 1; i < pathSegments.Length; i++)
                     pathSegments[i] = pathSegments[i].Trim();
@@ -154,7 +154,10 @@ namespace HelloCore
                 foreach (string segment in pathSegments)
                     trimmedPath += segment + "\\";
 
-                return trimmedPath.TrimEnd(new char[] { '\\' });
+                if (pathSegments.Length > 1)
+                    return trimmedPath.TrimEnd(new char[] { '\\' });
+                else
+                    return trimmedPath;
             }
             else
             {
